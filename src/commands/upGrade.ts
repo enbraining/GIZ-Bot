@@ -4,7 +4,7 @@ import { Command } from "../interfaces/Command";
 export default {
   data: new SlashCommandBuilder()
     .setName("up-grade")
-    .setDescription("관리자 전용 명령어로 새 학기에 학년을 올려주기 위해서 사용합니다. 3학"),
+    .setDescription("(ADMINISTRATOR ONLY) 자동으로 모든 인원의 학년을 올려주기 위해서 사용합니다."),
 
   async execute(interaction: ChatInputCommandInteraction) {
     if(!interaction.memberPermissions?.has("Administrator")) return
