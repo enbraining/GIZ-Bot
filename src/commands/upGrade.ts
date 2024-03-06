@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, Role, RoleManager, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, GuildMember, Role, RoleManager, SlashCommandBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
 
 export default {
@@ -7,10 +7,6 @@ export default {
     .setDescription("(ADMINISTRATOR ONLY) 자동으로 모든 인원의 학년을 올려주기 위해서 사용합니다."),
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const guildId = process.env.GUILD_ID ?? '';
-
-    if(!interaction.memberPermissions?.has("Administrator") || interaction.guildId != guildId) return
-
     const getRole = async (id: string) => {
       return await interaction.guild?.roles.fetch().then(roles =>
         roles.find(role => role.id === id)  
@@ -21,15 +17,13 @@ export default {
       await getRole(process.env.FIRST_ROLE ?? ''),
       await getRole(process.env.SECOND_ROLE ?? ''),
       await getRole(process.env.THIRD_ROLE ?? ''),
+      await getRole(process.env.GRADUATE_GRADE ?? '')
     ]
-
-    const noGrade = await getRole(process.env.NO_GRADE ?? '') // 졸업생
 
     grades.map((grade, index) => {
       grade.members.map(member => {
         member.roles.remove(grades[index])
-        if(index === 0 || index === 1) member.roles.add(grades[index + 1])
-        else { member.roles.add(noGrade) }
+        member.roles.add(grades[index + 1])
       })
     })
 

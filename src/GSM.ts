@@ -51,7 +51,10 @@ export class GSM {
 
         const command = this.slashCommandMap.get(interaction.commandName);
 
-        if (!command) return;
+        if (!command || 
+          interaction.guildId != process.env.GUILD_ID ||
+          !interaction.memberPermissions?.has("Administrator")  
+        ) return;
 
         try {
           await command.execute(interaction);
