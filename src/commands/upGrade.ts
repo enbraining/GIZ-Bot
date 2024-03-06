@@ -4,7 +4,7 @@ import { Command } from "../interfaces/Command";
 export default {
   data: new SlashCommandBuilder()
     .setName("up-grade")
-    .setDescription("새 학기에 학년을 자동으로 올려줄 때 사용합니다."),
+    .setDescription("관리자 전용 명령어로 새 학기에 학년을 올려주기 위해서 사용합니다. 3학"),
 
   async execute(interaction: ChatInputCommandInteraction) {
     if(!interaction.memberPermissions?.has("Administrator")) return
@@ -21,11 +21,13 @@ export default {
       await getRole(process.env.THIRD_ROLE ?? ''),
     ]
 
+    const noGrade = await getRole(process.env.NO_GRADE ?? '') // 졸업생
+
     grades.map((grade, index) => {
       grade.members.map(member => {
         member.roles.remove(grades[index])
         if(index === 0 || index === 1) member.roles.add(grades[index + 1])
-        else { if(!member.permissions.has("Administrator")) member.kick() }
+        else { member.roles.add(noGrade) }
       })
     })
 
