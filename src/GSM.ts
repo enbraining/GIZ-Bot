@@ -3,6 +3,7 @@ import { Command } from "./interfaces/Command";
 import { config } from "./utils/config";
 import kickGraduate from "./commands/kickGraduate";
 import upGrade from "./commands/upGrade";
+import filterMention from "./commands/filterMention";
 
 export class GSM {
   private slashCommandMap = new Map<string, Command>();
@@ -29,7 +30,8 @@ export class GSM {
     );
     const slashCommands: Array<Command> = [
       upGrade,
-      kickGraduate
+      kickGraduate,
+      filterMention,
     ];
 
     this.slashCommandMap = slashCommands.reduce((map, command) => {
