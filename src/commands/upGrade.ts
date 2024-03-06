@@ -3,7 +3,7 @@ import { Command } from "../interfaces/Command";
 
 export default {
   data: new SlashCommandBuilder()
-    .setName("auto-grade")
+    .setName("up-grade")
     .setDescription("새 학기에 학년을 자동으로 올려줄 때 사용합니다."),
 
   async execute(interaction: ChatInputCommandInteraction) {

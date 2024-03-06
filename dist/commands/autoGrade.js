@@ -36,6 +36,7 @@ exports.default = {
                     member.kick();
             });
             yield interaction.reply({
+                ephemeral: true,
                 content: `성공적으로 학년이 변경되었습니다.`,
             });
         });

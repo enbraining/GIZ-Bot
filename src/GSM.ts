@@ -1,5 +1,5 @@
 import { Client, Events, GuildMember, Interaction, REST, Routes } from "discord.js";
-import InviteMember from "./commands/autoGrade";
+import InviteMember from "./commands/upGrade";
 import { Command } from "./interfaces/Command";
 import { config } from "./utils/config";
 
