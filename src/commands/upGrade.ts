@@ -7,7 +7,9 @@ export default {
     .setDescription("(ADMINISTRATOR ONLY) 자동으로 모든 인원의 학년을 올려주기 위해서 사용합니다."),
 
   async execute(interaction: ChatInputCommandInteraction) {
-    if(!interaction.memberPermissions?.has("Administrator")) return
+    const guildId = process.env.GUILD_ID ?? '';
+
+    if(!interaction.memberPermissions?.has("Administrator") || interaction.guildId != guildId) return
 
     const getRole = async (id: string) => {
       return await interaction.guild?.roles.fetch().then(roles =>

@@ -68,7 +68,11 @@ export class GSM {
 
   private async onGuildMemberAdd() {
     this.client.on(Events.GuildMemberAdd, async (member: GuildMember) => {
-      member.roles.add('1214753898892623913');
+      const guildId = process.env.GUILD_ID ?? '';
+
+      if(member.guild.id == guildId){
+        member.roles.add(process.env.FIRST_GRADE ?? '');
+      }
     });
   }
 }
