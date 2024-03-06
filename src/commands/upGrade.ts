@@ -16,9 +16,9 @@ export default {
     }
 
     const grades: Role[] = [
-      await getRole('1214753898892623913'),
-      await getRole('1214753970942115860'),
-      await getRole('1214753986519760947'),
+      await getRole(process.env.FIRST_ROLE ?? ''),
+      await getRole(process.env.SECOND_ROLE ?? ''),
+      await getRole(process.env.THIRD_ROLE ?? ''),
     ]
 
     grades.map((grade, index) => {
