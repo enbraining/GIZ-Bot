@@ -9,6 +9,6 @@ CMD ["ls"]
 
 COPY . .
 
-EXPOSE 3004
+EXPOSE 3005
 
 CMD ["npm", "run", "start"]
