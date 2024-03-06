@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, Role, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, Role, RoleManager, SlashCommandBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
 
 export default {
@@ -9,23 +9,24 @@ export default {
   async execute(interaction: ChatInputCommandInteraction) {
     if(!interaction.memberPermissions?.has("Administrator")) return
 
-    const firstGrade = interaction.guild?.roles.cache.find(role => role.id === '1214753898892623913') as Role
-    const secondGrade = interaction.guild?.roles.cache.find(role => role.id === '1214753970942115860') as Role
-    const thirdGrade = interaction.guild?.roles.cache.find(role => role.id === '1214753986519760947') as Role
+    const getRole = async (id: string) => {
+      return await interaction.guild?.roles.fetch().then(roles =>
+        roles.find(role => role.id === id)  
+      ) as Role
+    }
 
-    firstGrade?.members.map(member => {
-      member.roles.remove(firstGrade)
-      member.roles.add(secondGrade)
-    })
+    const grades: Role[] = [
+      await getRole('1214753898892623913'),
+      await getRole('1214753970942115860'),
+      await getRole('1214753986519760947'),
+    ]
 
-    secondGrade?.members.map(member => {
-      member.roles.remove(secondGrade)
-      member.roles.add(thirdGrade)
-    })
-
-    thirdGrade?.members.map(member => {
-      member.roles.remove(thirdGrade)
-      if(!member.permissions.has("Administrator")) member.kick()
+    grades.map((grade, index) => {
+      grade.members.map(member => {
+        member.roles.remove(grades[index])
+        if(index === 0 || index === 1) member.roles.add(grades[index + 1])
+        else { if(!member.permissions.has("Administrator")) member.kick() }
+      })
     })
 
     await interaction.reply({
