@@ -9,12 +9,9 @@ export default {
   async execute(interaction: ChatInputCommandInteraction) {
     if(!interaction.memberPermissions?.has("Administrator")) return
 
-    const firstGrade = 
-    interaction.guild?.roles.cache.find(role => role.id === '1214753898892623913') as Role
-    const secondGrade = 
-    interaction.guild?.roles.cache.find(role => role.id === '1214753970942115860') as Role
-    const thirdGrade = 
-    interaction.guild?.roles.cache.find(role => role.id === '1214753986519760947') as Role
+    const firstGrade = interaction.guild?.roles.cache.find(role => role.id === '1214753898892623913') as Role
+    const secondGrade = interaction.guild?.roles.cache.find(role => role.id === '1214753970942115860') as Role
+    const thirdGrade = interaction.guild?.roles.cache.find(role => role.id === '1214753986519760947') as Role
 
     firstGrade?.members.map(member => {
       member.roles.remove(firstGrade)

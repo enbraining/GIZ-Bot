@@ -1,5 +1,5 @@
 import { Client, Events, GuildMember, Interaction, REST, Routes } from "discord.js";
-import InviteMember from "./commands/upGrade";
+import UpGrade from "./commands/upGrade";
 import { Command } from "./interfaces/Command";
 import { config } from "./utils/config";
 
@@ -27,7 +27,7 @@ export class GSM {
       config.discordToken,
     );
     const slashCommands: Array<Command> = [
-      InviteMember
+      UpGrade
     ];
 
     this.slashCommandMap = slashCommands.reduce((map, command) => {
