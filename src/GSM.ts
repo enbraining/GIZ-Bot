@@ -1,7 +1,8 @@
 import { Client, Events, GuildMember, Interaction, REST, Routes } from "discord.js";
-import UpGrade from "./commands/upGrade";
 import { Command } from "./interfaces/Command";
 import { config } from "./utils/config";
+import kickGraduate from "./commands/kickGraduate";
+import upGrade from "./commands/upGrade";
 
 export class GSM {
   private slashCommandMap = new Map<string, Command>();
@@ -27,7 +28,8 @@ export class GSM {
       config.discordToken,
     );
     const slashCommands: Array<Command> = [
-      UpGrade
+      upGrade,
+      kickGraduate
     ];
 
     this.slashCommandMap = slashCommands.reduce((map, command) => {

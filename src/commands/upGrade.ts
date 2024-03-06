@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, GuildMember, Role, RoleManager, SlashCommandBuilder } from "discord.js";
+import { ChatInputCommandInteraction, GuildMember, Role, SlashCommandBuilder } from "discord.js";
 import { Command } from "../interfaces/Command";
 
 export default {
@@ -8,24 +8,23 @@ export default {
 
   async execute(interaction: ChatInputCommandInteraction) {
     const getRole = async (id: string) => {
-      return await interaction.guild?.roles.fetch().then(roles =>
-        roles.find(role => role.id === id)  
-      ) as Role
+        const role = await interaction.guild?.roles.fetch()
+        return role?.find(role => role.id == id)
     }
-
-    const grades: Role[] = [
-      await getRole(process.env.FIRST_ROLE ?? ''),
-      await getRole(process.env.SECOND_ROLE ?? ''),
-      await getRole(process.env.THIRD_ROLE ?? ''),
-      await getRole(process.env.GRADUATE_GRADE ?? '')
+  
+    const grades = [
+        await getRole(process.env.FIRST_GRADE ?? ''),
+        await getRole(process.env.SECOND_GRADE ?? ''),
+        await getRole(process.env.THIRD_GRADE ?? ''),
+        await getRole(process.env.GRADUATE_GRADE ?? ''),
     ]
 
     grades.map((grade, index) => {
-      grade.members.map(member => {
-        member.roles.remove(grades[index])
-        member.roles.add(grades[index + 1])
-      })
-    })
+        grade?.members.map(member => {
+          member.roles.remove(grades[index] ?? '');
+          member.roles.add(grades[index + 1] ?? '');
+        });
+    });
 
     await interaction.reply({
       ephemeral: true,
