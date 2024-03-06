@@ -15,7 +15,7 @@ const client = new Client({
 export const bot = new GSM(client);
 
 const app: Express = express();
-const port = 3004;
+const port = process.env.SERVER_PORT;
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
