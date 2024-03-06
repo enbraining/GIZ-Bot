@@ -3,11 +3,9 @@ FROM node:18
 COPY package*.json ./
 
 RUN npm install  
-CMD ["npm", "run", "build"]
-
-CMD ["ls"]
 
 COPY . .
+RUN npm run build
 
 EXPOSE 3005
 
