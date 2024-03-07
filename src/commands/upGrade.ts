@@ -4,7 +4,7 @@ import { Command } from "../interfaces/Command";
 export default {
   data: new SlashCommandBuilder()
     .setName("up-grade")
-    .setDescription("(ADMINISTRATOR ONLY) 자동으로 모든 인원의 학년을 올려주기 위해서 사용합니다."),
+    .setDescription("(돌이킬 수 없습니다) 자동으로 모든 인원의 학년을 올려주기 위해서 사용합니다."),
 
   async execute(interaction: ChatInputCommandInteraction) {
     const getRole = async (id: string) => {
