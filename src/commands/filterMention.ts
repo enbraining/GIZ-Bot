@@ -4,7 +4,7 @@ import { Command } from "../interfaces/Command";
 export default {
   data: new SlashCommandBuilder()
     .setName("mention")
-    .setDescription("역할에 대해 필터링해서 언급할 수 있습니다.")
+    .setDescription("(ADMINISTRATOR ONLY) 역할에 대해 필터링해서 언급할 수 있습니다.")
     .addRoleOption((role: any) => role
         .setName('first')
         .setDescription('해당 역할을 포함해서 언급합니다.')
