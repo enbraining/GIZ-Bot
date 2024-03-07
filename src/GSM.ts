@@ -83,23 +83,12 @@ export class GSM {
   }
 
   private async onGuildMemberUpdate(){
-    console.log('BYE GRADUATE')
-
-    this.client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
+    this.client.on('guildMemberUpdate', async (oldMember, newMember) => {
       if(newMember.displayName.startsWith('delete')) newMember.kick("축 졸업")
 
       const getRole = async (id: string) => {
         const role = await newMember.guild?.roles.fetch()
         return role?.find(role => role.id == id)
-      }
-
-      const getClassList = (grade: number) => {
-        switch (grade) {
-          case 0: return firstGrade
-          case 1: return secondGrade
-          case 2: return thirdGrade
-          default: return []
-        }
       }
 
       const grades = [
@@ -130,6 +119,15 @@ export class GSM {
         await getRole(process.env.THREE_FOUR ?? ''),
       ]
 
+      const getClassList = (grade: number) => {
+        switch (grade) {
+          case 0: return firstGrade
+          case 1: return secondGrade
+          case 2: return thirdGrade
+          default: return []
+        }
+      }
+
       const [newGrade, oldGrade] = Array(
         Number.parseInt(newMember.displayName.at(0) ?? '') - 1,
         Number.parseInt(oldMember.displayName.at(0) ?? '') - 1,
@@ -140,16 +138,15 @@ export class GSM {
         Number.parseInt(oldMember.displayName.at(1) ?? '') - 1,
       )
 
-      if(newGrade != oldGrade){
+      if(newGrade != oldGrade || newClass != oldClass){
         newMember.roles.add(grades[newGrade] as Role)
         newMember.roles.remove(grades[oldGrade] as Role)
-        console.log(newGrade)
-      }
 
-      if(newClass != oldClass){
         newMember.roles.add(getClassList(newGrade)[newClass] as Role)
         newMember.roles.remove(getClassList(oldGrade)[oldClass] as Role)
-        console.log(newClass)
+        
+        console.log("학년 :" + newGrade)
+        console.log("반 :" + newClass)
       }
     }
   )}
