@@ -22,7 +22,7 @@ export default {
     grades.map((grade, index) => {
         grade?.members.map(member => {
           member.roles.remove(grades[index] ?? '');
-          member.roles.add(grades[index + 1] ?? '');
+          if(index != 3) member.roles.add(grades[index + 1] ?? '');
         });
     });
 
