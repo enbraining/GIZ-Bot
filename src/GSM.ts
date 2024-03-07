@@ -1,9 +1,8 @@
-import { Client, Events, GuildMember, Interaction, REST, Routes } from "discord.js";
+import { Client, Events, Guild, GuildMember, Interaction, REST, Role, Routes, embedLength } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { config } from "./utils/config";
-import kickGraduate from "./commands/kickGraduate";
-import upGrade from "./commands/upGrade";
 import filterMention from "./commands/filterMention";
+import kickThird from "./commands/kickThird";
 
 export class GSM {
   private slashCommandMap = new Map<string, Command>();
@@ -21,7 +20,8 @@ export class GSM {
     this.client.on("error", console.error);
 
     this.onInteractionReceived();
-    this.onGuildMemberAdd();
+    this.onGuildMemberAdd();  
+    this.onGuildMemberUpdate();
   }
 
   private async registerSlashCommands() {
@@ -29,8 +29,7 @@ export class GSM {
       config.discordToken,
     );
     const slashCommands: Array<Command> = [
-      upGrade,
-      kickGraduate,
+      kickThird,
       filterMention
     ];
 
@@ -82,4 +81,76 @@ export class GSM {
       }
     });
   }
+
+  private async onGuildMemberUpdate(){
+    console.log('BYE GRADUATE')
+
+    this.client.on(Events.GuildMemberUpdate, async (oldMember, newMember) => {
+      if(newMember.displayName.startsWith('delete')) newMember.kick("축 졸업")
+
+      const getRole = async (id: string) => {
+        const role = await newMember.guild?.roles.fetch()
+        return role?.find(role => role.id == id)
+      }
+
+      const getClassList = (grade: number) => {
+        switch (grade) {
+          case 0: return firstGrade
+          case 1: return secondGrade
+          case 2: return thirdGrade
+          default: return []
+        }
+      }
+
+      const grades = [
+        await getRole(process.env.FIRST_GRADE ?? ''),
+        await getRole(process.env.SECOND_GRADE ?? ''),
+        await getRole(process.env.THIRD_GRADE ?? ''),
+        await getRole(process.env.GRADUATE_GRADE ?? ''),
+      ]
+
+      const firstGrade = [
+        await getRole(process.env.ONE_ONE ?? ''),
+        await getRole(process.env.ONE_TWO ?? ''),
+        await getRole(process.env.ONE_THREE ?? ''),
+        await getRole(process.env.ONE_FOUR ?? ''),
+      ]
+
+      const secondGrade = [
+        await getRole(process.env.TWO_ONE ?? ''),
+        await getRole(process.env.TWO_TWO ?? ''),
+        await getRole(process.env.TWO_THREE ?? ''),
+        await getRole(process.env.TWO_FOUR ?? ''),
+      ]
+
+      const thirdGrade = [
+        await getRole(process.env.THREE_ONE ?? ''),
+        await getRole(process.env.THREE_TWO ?? ''),
+        await getRole(process.env.THREE_THREE ?? ''),
+        await getRole(process.env.THREE_FOUR ?? ''),
+      ]
+
+      const [newGrade, oldGrade] = Array(
+        Number.parseInt(newMember.displayName.at(0) ?? '') - 1,
+        Number.parseInt(oldMember.displayName.at(0) ?? '') - 1,
+      )
+
+      const [newClass, oldClass] = Array(
+        Number.parseInt(newMember.displayName.at(1) ?? '') - 1,
+        Number.parseInt(oldMember.displayName.at(1) ?? '') - 1,
+      )
+
+      if(newGrade != oldGrade){
+        newMember.roles.add(grades[newGrade] as Role)
+        newMember.roles.remove(grades[oldGrade] as Role)
+        console.log(newGrade)
+      }
+
+      if(newClass != oldClass){
+        newMember.roles.add(getClassList(newGrade)[newClass] as Role)
+        newMember.roles.remove(getClassList(oldGrade)[oldClass] as Role)
+        console.log(newClass)
+      }
+    }
+  )}
 }

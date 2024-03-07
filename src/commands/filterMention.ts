@@ -7,16 +7,13 @@ export default {
     .setDescription("역할에 대해 필터링해서 언급할 수 있습니다.")
     .addRoleOption((role: any) => role
         .setName('first')
-        .setDescription('해당 역할을 포함해서 언급합니다.')
+        .setDescription('해당 역할이 있으면 언급합니다.')
         .setRequired(true)
     )
     .addRoleOption((role: any) => role
         .setName('second')
-        .setDescription('해당 역할도 포함해서 언급합니다.')
-    )
-    .addRoleOption((role: any) => role
-        .setName('third')
-        .setDescription('해당 역할도 포함해서 언급합니다.')
+        .setDescription('해당 역할도 있어야 언급합니다.')
+        .setRequired(true)
     ),
 
     async execute(interaction: ChatInputCommandInteraction) {
