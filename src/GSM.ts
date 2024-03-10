@@ -1,4 +1,4 @@
-import { Client, Events, Guild, GuildMember, Interaction, REST, Role, Routes, embedLength } from "discord.js";
+import { Client, Events, GuildMember, Interaction, REST, Role, Routes } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { config } from "./utils/config";
 import filterMention from "./commands/filterMention";
@@ -78,41 +78,63 @@ export class GSM {
 
       if(member.guild.id == guildId){
         member.roles.add(process.env.FIRST_GRADE ?? '');
+
+        member.send({
+          embeds: [
+            {
+              title: `${member.guild.name}`,
+              description: `
+              서버 별명을 학번과 이름으로 변경해주세요. ex. 2301 김동학\n
+              별명을 변경했지만 역할이 제대로 부여되지 않았다면 학번에서 번호를 한번 바꿔보세요.
+              `
+            }
+          ],
+        })
       }
     });
   }
 
   private async onGuildMemberUpdate(){
     this.client.on('guildMemberUpdate', async (oldMember, newMember) => {
-      if(newMember.displayName.startsWith('delete')) newMember.kick("축 졸업")
+      const [newGrade, oldGrade] = Array(
+        parseInt(newMember.displayName.at(0) ?? '1') - 1,
+        parseInt(oldMember.displayName.at(0) ?? '1') - 1,
+      )
+
+      const [newClass, oldClass] = Array(
+        parseInt(newMember.displayName.at(1) ?? '1') - 1,
+        parseInt(oldMember.displayName.at(1) ?? '1') - 1,
+      )
+
+      if(newGrade < 0 || newGrade > 2 || newClass < 0 || newClass > 3) return
 
       const getRole = async (id: string) => {
         const role = await newMember.guild?.roles.fetch()
-        return role?.find(role => role.id == id)
+        return role?.find(role => role.id == id) as Role
       }
 
-      const grades = [
+      const allGrade = [
         await getRole(process.env.FIRST_GRADE ?? ''),
         await getRole(process.env.SECOND_GRADE ?? ''),
         await getRole(process.env.THIRD_GRADE ?? ''),
         await getRole(process.env.GRADUATE_GRADE ?? ''),
       ]
 
-      const firstGrade = [
+      const firstGradeClass: Role[] = [
         await getRole(process.env.ONE_ONE ?? ''),
         await getRole(process.env.ONE_TWO ?? ''),
         await getRole(process.env.ONE_THREE ?? ''),
         await getRole(process.env.ONE_FOUR ?? ''),
       ]
 
-      const secondGrade = [
+      const secondGradeClass: Role[] = [
         await getRole(process.env.TWO_ONE ?? ''),
         await getRole(process.env.TWO_TWO ?? ''),
         await getRole(process.env.TWO_THREE ?? ''),
         await getRole(process.env.TWO_FOUR ?? ''),
       ]
 
-      const thirdGrade = [
+      const thirdGradeClass: Role[] = [
         await getRole(process.env.THREE_ONE ?? ''),
         await getRole(process.env.THREE_TWO ?? ''),
         await getRole(process.env.THREE_THREE ?? ''),
@@ -121,32 +143,36 @@ export class GSM {
 
       const getClassList = (grade: number) => {
         switch (grade) {
-          case 0: return firstGrade
-          case 1: return secondGrade
-          case 2: return thirdGrade
+          case 0: return firstGradeClass
+          case 1: return secondGradeClass
+          case 2: return thirdGradeClass
           default: return []
         }
       }
 
-      const [newGrade, oldGrade] = Array(
-        Number.parseInt(newMember.displayName.at(0) ?? '') - 1,
-        Number.parseInt(oldMember.displayName.at(0) ?? '') - 1,
-      )
-
-      const [newClass, oldClass] = Array(
-        Number.parseInt(newMember.displayName.at(1) ?? '') - 1,
-        Number.parseInt(oldMember.displayName.at(1) ?? '') - 1,
-      )
-
       if(newGrade != oldGrade || newClass != oldClass){
-        newMember.roles.add(grades[newGrade] as Role)
-        newMember.roles.remove(grades[oldGrade] as Role)
+        try {
+          newMember.roles.add(allGrade[newGrade] as Role)
+          newMember.roles.add(getClassList(newGrade)[newClass] as Role)
 
-        newMember.roles.add(getClassList(newGrade)[newClass] as Role)
-        newMember.roles.remove(getClassList(oldGrade)[oldClass] as Role)
+          for(let i = 0; i <= 2; i++){
+            if(newGrade === i) { 
+              getClassList(i).map((grade, index) => {
+              if(index != newClass) newMember.roles.remove(grade)
+            })} else getClassList(i).map(grade => newMember.roles.remove(grade))
+          }
+
+          allGrade.filter(grade => 
+            grade?.id != allGrade[newGrade]?.id
+          ).map(grade => {
+            newMember.roles.remove(grade.id)
+          }) 
+        } catch(error){
+          console.log(error)
+        }
         
-        console.log("학년 :" + newGrade)
-        console.log("반 :" + newClass)
+        console.log("학년 :" + newGrade + 1)
+        console.log("반 :" + newClass + 1)
       }
     }
   )}
