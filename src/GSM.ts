@@ -96,15 +96,8 @@ export class GSM {
 
   private async onGuildMemberUpdate(){
     this.client.on('guildMemberUpdate', async (oldMember, newMember) => {
-      const [newGrade, oldGrade] = Array(
-        parseInt(newMember.displayName.at(0) ?? '1') - 1,
-        parseInt(oldMember.displayName.at(0) ?? '1') - 1,
-      )
-
-      const [newClass, oldClass] = Array(
-        parseInt(newMember.displayName.at(1) ?? '1') - 1,
-        parseInt(oldMember.displayName.at(1) ?? '1') - 1,
-      )
+      const newGrade = parseInt(newMember.displayName.at(0) ?? '1') - 1
+      const newClass = parseInt(newMember.displayName.at(1) ?? '1') - 1
 
       if(newGrade < 0 || newGrade > 2 || newClass < 0 || newClass > 3) return
 
@@ -150,7 +143,7 @@ export class GSM {
         }
       }
 
-      if(newGrade != oldGrade || newClass != oldClass){
+      if(newMember.displayName != oldMember.displayName){
         newMember.send("모든 변경 내역은 기록되고 있습니다. 신중히 변경해주세요.")
         const logChannel = await newMember.guild.channels.cache.get(process.env.LOG_CHANNEL ?? '') as TextChannel
         logChannel.send(`${oldMember.displayName} -> ${newMember.displayName}`)
@@ -162,8 +155,9 @@ export class GSM {
           for(let i = 0; i <= 2; i++){
             if(newGrade === i) { 
               getClassList(i).map((grade, index) => {
-              if(index != newClass) newMember.roles.remove(grade)
-            })} else getClassList(i).map(grade => newMember.roles.remove(grade))
+                if(index != newClass) newMember.roles.remove(grade)
+              })
+            } else getClassList(i).map(grade => newMember.roles.remove(grade))
           }
 
           allGrade.filter(grade => 
