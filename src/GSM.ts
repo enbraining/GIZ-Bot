@@ -144,12 +144,11 @@ export class GSM {
       }
 
       if(newMember.displayName != oldMember.displayName){
-        newMember.send("모든 변경 내역은 기록되고 있습니다. 신중히 변경해주세요.")
         newMember.send({
           embeds: [
             new EmbedBuilder({
               description: `
-              모든 변경 내역은 기록되고 있습니다. 신중히 변경해주세요.\n
+              모든 변경 내역은 기록되고 있습니다. 신중히 변경해주세요.
               제대로 역할이 부여되지 않았다면 다른 닉네임으로 변경했다가 다시 시도해주세요.
               `
             })
