@@ -152,7 +152,7 @@ export class GSM {
 
       if(newGrade != oldGrade || newClass != oldClass){
         newMember.send("모든 변경 내역은 기록되고 있습니다. 신중히 변경해주세요.")
-        const logChannel = await newMember.guild.channels.fetch().then(channels => channels.get(process.env.LOG_CHANNEL ?? '') as TextChannel)
+        const logChannel = await newMember.guild.channels.cache.get(process.env.LOG_CHANNEL ?? '') as TextChannel
         logChannel.send(`${oldMember.displayName} -> ${newMember.displayName}`)
 
         try {
