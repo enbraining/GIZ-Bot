@@ -1,8 +1,8 @@
 import { Client, EmbedBuilder, Events, GuildMember, Interaction, REST, Role, Routes, TextChannel } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { config } from "./utils/config";
-import filterMention from "./commands/filterMention";
 import kickThird from "./commands/kickThird";
+import gradeNotice from "./commands/gradeNotice";
 
 export class GSM {
   private slashCommandMap = new Map<string, Command>();
@@ -30,7 +30,7 @@ export class GSM {
     );
     const slashCommands: Array<Command> = [
       kickThird,
-      filterMention
+      gradeNotice
     ];
 
     this.slashCommandMap = slashCommands.reduce((map, command) => {
