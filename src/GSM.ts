@@ -85,7 +85,7 @@ export class GSM {
               title: `${member.guild.name}`,
               description: `
               서버 별명을 학번과 이름으로 변경해주세요. ex. 2301 김동학\n
-              별명을 변경했지만 역할이 제대로 부여되지 않았다면 학번에서 번호를 한번 바꿔보세요.
+              제대로 역할이 부여되지 않았다면 다른 닉네임으로 변경했다가 다시 시도해주세요.
               `
             }
           ],
@@ -160,9 +160,7 @@ export class GSM {
             } else getClassList(i).map(grade => newMember.roles.remove(grade))
           }
 
-          allGrade.filter(grade => 
-            grade?.id != allGrade[newGrade]?.id
-          ).map(grade => {
+          allGrade.filter(grade => grade?.id != allGrade[newGrade]?.id).map(grade => {
             newMember.roles.remove(grade.id)
           }) 
         } catch(error){
