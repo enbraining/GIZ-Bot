@@ -96,8 +96,6 @@ export class GSM {
 
   private async onGuildMemberUpdate(){
     this.client.on('guildMemberUpdate', async (oldMember, newMember) => {
-
-
       const [newGrade, oldGrade] = Array(
         parseInt(newMember.displayName.at(0) ?? '1') - 1,
         parseInt(oldMember.displayName.at(0) ?? '1') - 1,
@@ -153,6 +151,8 @@ export class GSM {
       }
 
       if(newGrade != oldGrade || newClass != oldClass){
+        newMember.send("모든 변경 내역은 기록되고 있습니다. 신중히 변경해주세요.")
+
         try {
           newMember.roles.add(allGrade[newGrade] as Role)
           newMember.roles.add(getClassList(newGrade)[newClass] as Role)
