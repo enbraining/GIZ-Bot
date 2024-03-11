@@ -96,7 +96,7 @@ export class GSM {
 
   private async onGuildMemberUpdate(){
     this.client.on('guildMemberUpdate', async (oldMember, newMember) => {
-      newMember.send('학년을 바꾼 기록은 모두 로그로 남습니다. 신중히 변경해주세요.')
+
 
       const [newGrade, oldGrade] = Array(
         parseInt(newMember.displayName.at(0) ?? '1') - 1,
