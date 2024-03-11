@@ -1,4 +1,4 @@
-import { Client, Events, GuildMember, Interaction, REST, Role, Routes, TextChannel } from "discord.js";
+import { Client, EmbedBuilder, Events, GuildMember, Interaction, REST, Role, Routes, TextChannel } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { config } from "./utils/config";
 import filterMention from "./commands/filterMention";
@@ -145,6 +145,16 @@ export class GSM {
 
       if(newMember.displayName != oldMember.displayName){
         newMember.send("모든 변경 내역은 기록되고 있습니다. 신중히 변경해주세요.")
+        newMember.send({
+          embeds: [
+            new EmbedBuilder({
+              description: `
+              모든 변경 내역은 기록되고 있습니다. 신중히 변경해주세요.\n
+              제대로 역할이 부여되지 않았다면 다른 닉네임으로 변경했다가 다시 시도해주세요.
+              `
+            })
+          ]
+        })
         const logChannel = await newMember.guild.channels.cache.get(process.env.LOG_CHANNEL ?? '') as TextChannel
         logChannel.send(`${oldMember.displayName} -> ${newMember.displayName}`)
 
