@@ -1,8 +1,8 @@
 import { Client, EmbedBuilder, Events, GuildMember, Interaction, REST, Role, Routes, TextChannel } from "discord.js";
+import gradeNotice from "./commands/gradeNotice";
+import kickThird from "./commands/kickThird";
 import { Command } from "./interfaces/Command";
 import { config } from "./utils/config";
-import kickThird from "./commands/kickThird";
-import gradeNotice from "./commands/gradeNotice";
 
 export class GSM {
   private slashCommandMap = new Map<string, Command>();
@@ -77,7 +77,7 @@ export class GSM {
       const guildId = process.env.GUILD_ID ?? '';
 
       if(member.guild.id == guildId){
-        member.roles.add(process.env.FIRST_GRADE ?? '');
+        member.roles.add(process.env.STUDENT_ROLE ?? '');
 
         member.send({
           embeds: [
