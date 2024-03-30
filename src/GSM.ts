@@ -154,22 +154,26 @@ export class GSM {
             })
           ]
         })
+
         const logChannel = await newMember.guild.channels.cache.get(process.env.LOG_CHANNEL ?? '') as TextChannel
         logChannel.send(`${oldMember.displayName} -> ${newMember.displayName}`)
 
         try {
-          newMember.roles.add(allGrade[newGrade] as Role)
-          newMember.roles.add(getClassList(newGrade)[newClass] as Role)
+          const newGradeRole = allGrade[newGrade] as Role
+          const newGradeClassRole = getClassList(newGrade)[newClass] as Role
+
+          newMember.roles.add(newGradeRole)
+          newMember.roles.add(newGradeClassRole)
 
           for(let i = 0; i <= 2; i++){
-            if(newGrade === i) { 
+            if(i === newGrade) { 
               getClassList(i).map((grade, index) => {
                 if(index != newClass) newMember.roles.remove(grade)
               })
             } else getClassList(i).map(grade => newMember.roles.remove(grade))
           }
 
-          allGrade.filter(grade => grade?.id != allGrade[newGrade]?.id).map(grade => {
+          allGrade.filter(grade => grade?.id != newGradeRole?.id).map(grade => {
             newMember.roles.remove(grade.id)
           }) 
         } catch(error){
