@@ -78,18 +78,7 @@ export class GSM {
 
       if(member.guild.id == guildId){
         member.roles.add(process.env.STUDENT_ROLE ?? '');
-
-        member.send({
-          embeds: [
-            {
-              title: `${member.guild.name}`,
-              description: `
-              서버 별명을 학번과 이름으로 변경해주세요. ex. 2301 김동학\n
-              제대로 역할이 부여되지 않았다면 다른 닉네임으로 변경했다가 다시 시도해주세요.
-              `
-            }
-          ],
-        })
+        member.send(`서버 별명을 학번과 이름으로 변경해주세요. ex. 2301 김동학\n제대로 역할이 부여되지 않았다면 다른 닉네임으로 변경했다가 다시 시도해주세요.`)
       }
     });
   }
